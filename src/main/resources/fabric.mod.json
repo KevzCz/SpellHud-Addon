@@ -14,7 +14,7 @@
 	},
 	"license": "GPL-3.0",
 	"icon": "assets/spellhud-addon/icon.png",
-	"environment": "*",
+	"environment": "client",
 	"entrypoints": {
 		"main": [
 			"net.pixeldreamstudios.spellhudaddon.SpellHudAddon"
