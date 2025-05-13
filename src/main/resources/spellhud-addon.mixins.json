@@ -1,0 +1,12 @@
+{
+	"required": true,
+	"package": "net.pixeldreamstudios.spellhudaddon.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+		"ConfigMenuScreenMixin",
+		"SpellHotBarWidgetMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
