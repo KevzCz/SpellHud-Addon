@@ -23,7 +23,12 @@ public class AddonHudConfig extends HudConfig implements ConfigData {
 
     public enum LayoutStyle {
         HORIZONTAL,
-        VERTICAL,
-        GRID_3x3
+        VERTICAL_UP,
+        VERTICAL_DOWN,
+        GRID_3x3_UP,
+        GRID_3x3_DOWN,
+        CIRCULAR_CLOCKWISE,
+        CIRCULAR_COUNTERCLOCKWISE
     }
+
 }
