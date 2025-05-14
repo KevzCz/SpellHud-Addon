@@ -159,13 +159,27 @@ public class SpellHotBarWidgetMixin {
 
         Vec2f originOffset = new Vec2f(0, 0);
         if (layout == AddonHudConfig.LayoutStyle.VERTICAL_UP || layout == AddonHudConfig.LayoutStyle.GRID_3x3_UP) {
-            originOffset = new Vec2f(0, -totalHeight);
+            originOffset = new Vec2f(0, -slotHeight);
         }
 
+
+
         Vec2f drawOrigin = origin.add(originOffset);
-        Vec2f topLeft = drawOrigin;
-        Vec2f bottomRight = drawOrigin.add(new Vec2f(totalWidth, totalHeight));
+        Vec2f topLeft;
+        Vec2f bottomRight;
+
+        topLeft = drawOrigin;
+        bottomRight = drawOrigin.add(new Vec2f(totalWidth, totalHeight));
+
+
+        if (layout == AddonHudConfig.LayoutStyle.VERTICAL_UP || layout == AddonHudConfig.LayoutStyle.GRID_3x3_UP) {
+            topLeft = topLeft.add(new Vec2f(0, -totalHeight + 22));
+            bottomRight = bottomRight.add(new Vec2f(0, -totalHeight + 22));
+        }
+
         SpellHotBarWidget.lastRendered = new Rect(topLeft, bottomRight);
+
+
 
         TextureFile background = new TextureFile(Identifier.of("textures/gui/sprites/hud/hotbar.png"), 182, 22);
 
