@@ -28,7 +28,8 @@ public class AddonHudConfig extends HudConfig implements ConfigData {
         GRID_3x3_UP,
         GRID_3x3_DOWN,
         CIRCULAR_CLOCKWISE,
-        CIRCULAR_COUNTERCLOCKWISE
+        CIRCULAR_COUNTERCLOCKWISE,
+        CENTERED_HORIZONTAL_ABOVE_HOTBAR,
     }
 
 }

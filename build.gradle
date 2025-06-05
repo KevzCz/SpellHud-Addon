@@ -20,6 +20,10 @@ repositories {
 	}
 	maven { url 'https://maven.shedaniel.me/' }
 	maven { url "https://jitpack.io" }
+	flatDir {
+		dirs 'lib'
+	}
+
 }
 
 dependencies {
@@ -29,7 +33,6 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation("maven.modrinth:spell-engine:${project.spell_engine}")
 	include(implementation("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}"))
-	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 	modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}")
 

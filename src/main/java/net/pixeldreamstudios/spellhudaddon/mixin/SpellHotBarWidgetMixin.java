@@ -8,6 +8,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec2f;
+import net.pixeldreamstudios.spellhudaddon.SpellHudState;
 import net.pixeldreamstudios.spellhudaddon.config.AddonHudConfig;
 import net.spell_engine.client.gui.Drawable;
 import net.spell_engine.client.gui.HudKeyVisuals;
@@ -25,13 +26,37 @@ import java.util.List;
 
 @Mixin(SpellHotBarWidget.class)
 public class SpellHotBarWidgetMixin {
+
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     private static void spellhudaddon$overrideLayout(DrawContext context, int screenWidth, int screenHeight, ViewModel viewModel, CallbackInfo ci) {
         var addonConfig = AutoConfig.getConfigHolder(AddonHudConfig.class).getConfig();
 
+        SpellHudState.hasVisibleSpells = false;
+
+        if (addonConfig.layout == AddonHudConfig.LayoutStyle.CENTERED_HORIZONTAL_ABOVE_HOTBAR) {
+            List<SpellViewModel> spells = viewModel.spells();
+            if (spells.isEmpty()) {
+                return;
+            }
+
+            SpellHudState.hasVisibleSpells = true;
+            renderCenteredHorizontalLayout(context, screenWidth, screenHeight, viewModel);
+
+            ci.cancel();
+            return;
+        }
+
         if (addonConfig.layout != AddonHudConfig.LayoutStyle.HORIZONTAL) {
             var engineOffset = net.spell_engine.client.SpellEngineClient.hudConfig.value.hotbar.offset;
             addonConfig.hotbar.offset = engineOffset;
+
+            List<SpellViewModel> spells = viewModel.spells();
+            if (spells.isEmpty()) {
+                return;
+            }
+
+            SpellHudState.hasVisibleSpells = true;
+
 
             if (addonConfig.layout == AddonHudConfig.LayoutStyle.CIRCULAR_CLOCKWISE ||
                     addonConfig.layout == AddonHudConfig.LayoutStyle.CIRCULAR_COUNTERCLOCKWISE) {
@@ -42,6 +67,92 @@ public class SpellHotBarWidgetMixin {
 
             ci.cancel();
         }
+    }
+
+
+    private static void renderCenteredHorizontalLayout(DrawContext context, int screenWidth, int screenHeight, ViewModel viewModel) {
+        MinecraftClient client = MinecraftClient.getInstance();
+        TextRenderer textRenderer = client.textRenderer;
+        var config = AutoConfig.getConfigHolder(AddonHudConfig.class).getConfig();
+        List<SpellViewModel> spells = viewModel.spells();
+        if (spells.isEmpty()) return;
+
+        int leftWidth = 6;
+        int centerWidth = 10;
+        int rightWidth = 11;
+        int slotWidth = leftWidth + centerWidth + rightWidth - 6;
+        int slotHeight = 22;
+        int iconSize = 16;
+        int totalWidth = spells.size() * slotWidth;
+        boolean isCreative = MinecraftClient.getInstance().interactionManager != null &&
+                MinecraftClient.getInstance().interactionManager.getCurrentGameMode().isCreative();
+
+        int creativeOffset = isCreative ? 24 : 0;
+        int baseY = screenHeight - slotHeight - creativeOffset;
+
+
+        Vec2f origin = new Vec2f((screenWidth - totalWidth) / 2f, baseY);
+        Vec2f iconOffset = new Vec2f(3, 3);
+        TextureFile background = new TextureFile(Identifier.of("textures/gui/sprites/hud/hotbar.png"), 182, 22);
+
+        Rect bounds = new Rect(origin, origin.add(new Vec2f(totalWidth, slotHeight)));
+        SpellHotBarWidget.lastRendered = bounds;
+
+
+
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+
+        for (int i = 0; i < spells.size(); i++) {
+            SpellViewModel spell = spells.get(i);
+            int slotX = (int) origin.x + i * slotWidth;
+            int slotY = (int) origin.y;
+
+            context.drawTexture(background.id(), slotX, slotY, 0, 0, leftWidth, slotHeight, background.width(), background.height());
+            context.drawTexture(background.id(), slotX + leftWidth, slotY, 10, 0, centerWidth, slotHeight, background.width(), background.height());
+            context.drawTexture(background.id(), slotX + leftWidth + centerWidth - 6, slotY, 170, 0, rightWidth, slotHeight, background.width(), background.height());
+
+            int iconX = slotX + (int) iconOffset.x;
+            int iconY = slotY + (int) iconOffset.y;
+            if (spell.iconId() != null) {
+                context.drawTexture(spell.iconId(), iconX, iconY, 0, 0, iconSize, iconSize, iconSize, iconSize);
+            } else if (spell.itemStack() != null) {
+                context.drawItem(spell.itemStack(), iconX, iconY);
+            }
+
+
+            if (spell.cooldown() > 0) {
+                int k = iconY + (int) (iconSize * (1.0f - spell.cooldown()));
+                int l = iconY + iconSize;
+                context.fill(RenderLayer.getGuiOverlay(), iconX, k, iconX + iconSize, l, Integer.MAX_VALUE);
+            }
+
+            var kb = spell.keybinding();
+            var mod = spell.modifier();
+            int keyX = slotX + (slotWidth / 2);
+            int keyY = slotY + 8;
+
+            if (kb != null) {
+                context.getMatrices().push();
+                context.getMatrices().translate(0, 0, 200);
+                if (mod != null) {
+                    int spacing = 1;
+                    int modWidth = mod.width(textRenderer);
+                    int keyWidth = kb.width(textRenderer);
+                    int total = modWidth + keyWidth + spacing;
+                    int left = keyX - (total / 2);
+
+                    drawKeybinding(context, textRenderer, mod, left, keyY, Drawable.Anchor.LEADING, Drawable.Anchor.TRAILING);
+                    drawKeybinding(context, textRenderer, kb, left + modWidth + spacing, keyY, Drawable.Anchor.LEADING, Drawable.Anchor.TRAILING);
+                } else {
+                    drawKeybinding(context, textRenderer, kb, keyX, keyY, Drawable.Anchor.CENTER, Drawable.Anchor.TRAILING);
+                }
+                context.getMatrices().pop();
+            }
+        }
+
+        RenderSystem.disableBlend();
+        context.setShaderColor(1F, 1F, 1F, 1F);
     }
 
     private static void renderCircularLayout(DrawContext context, int screenWidth, int screenHeight, ViewModel viewModel, AddonHudConfig.LayoutStyle layout) {
