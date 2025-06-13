@@ -24,5 +24,10 @@ public class InGameHudMixin {
             context.getMatrices().translate(0, -24, 0);
         }
     }
-
+    @Inject(method = "renderHeldItemTooltip", at = @At("HEAD"))
+    private void shiftHeldItemTooltipUp(DrawContext context, CallbackInfo ci) {
+        if (shouldShiftHud()) {
+            context.getMatrices().translate(0, -3, 0); // Move up 12 pixels
+        }
+    }
 }

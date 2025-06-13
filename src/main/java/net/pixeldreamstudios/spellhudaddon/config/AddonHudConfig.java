@@ -22,14 +22,21 @@ public class AddonHudConfig extends HudConfig implements ConfigData {
     }
 
     public enum LayoutStyle {
-        HORIZONTAL,
-        VERTICAL_UP,
-        VERTICAL_DOWN,
-        GRID_3x3_UP,
-        GRID_3x3_DOWN,
-        CIRCULAR_CLOCKWISE,
-        CIRCULAR_COUNTERCLOCKWISE,
-        CENTERED_HORIZONTAL_ABOVE_HOTBAR,
+        HORIZONTAL("spellhud.layout.horizontal"),
+        VERTICAL_UP("spellhud.layout.vertical_up"),
+        VERTICAL_DOWN("spellhud.layout.vertical_down"),
+        GRID_3x3_UP("spellhud.layout.grid_3x3_up"),
+        GRID_3x3_DOWN("spellhud.layout.grid_3x3_down"),
+        CIRCULAR_CLOCKWISE("spellhud.layout.circular_clockwise"),
+        CIRCULAR_COUNTERCLOCKWISE("spellhud.layout.circular_counterclockwise"),
+        CENTERED_HORIZONTAL_ABOVE_HOTBAR("spellhud.layout.centered_horizontal_above_hotbar");
+
+        public final String translationKey;
+
+        LayoutStyle(String translationKey) {
+            this.translationKey = translationKey;
+        }
     }
+
 
 }

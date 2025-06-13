@@ -1,0 +1,11 @@
+{
+  "spellhud.layout.title": "Layout Style",
+  "spellhud.layout.horizontal": "Horizontal",
+  "spellhud.layout.vertical_up": "Vertical (Up)",
+  "spellhud.layout.vertical_down": "Vertical (Down)",
+  "spellhud.layout.grid_3x3_up": "Grid 3x3 (Up)",
+  "spellhud.layout.grid_3x3_down": "Grid 3x3 (Down)",
+  "spellhud.layout.circular_clockwise": "Circular (Clockwise)",
+  "spellhud.layout.circular_counterclockwise": "Circular (Counter-Clockwise)",
+  "spellhud.layout.centered_horizontal_above_hotbar": "Centered Above Hotbar"
+}
