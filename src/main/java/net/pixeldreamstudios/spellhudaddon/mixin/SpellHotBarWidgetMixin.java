@@ -12,6 +12,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec2f;
 import net.pixeldreamstudios.spellhudaddon.SpellHudState;
 import net.pixeldreamstudios.spellhudaddon.config.AddonHudConfig;
+import net.spell_engine.client.SpellEngineClient;
 import net.spell_engine.client.gui.Drawable;
 import net.spell_engine.client.gui.HudElement;
 import net.spell_engine.client.gui.HudKeyVisuals;
@@ -46,8 +47,8 @@ public class SpellHotBarWidgetMixin {
         }
 
         if (addonConfig.layout == AddonHudConfig.LayoutStyle.HORIZONTAL) return;
+        var engineOffset = SpellEngineClient.hudConfig.value.hotbar.offset;
 
-        var engineOffset = net.spell_engine.client.SpellEngineClient.hudConfig.value.hotbar.offset;
         addonConfig.hotbar.offset = engineOffset;
 
         List<SpellViewModel> spells = viewModel.spells();

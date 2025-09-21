@@ -3,7 +3,6 @@ package net.pixeldreamstudios.spellhudaddon.mixin;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
-import net.minecraft.client.render.RenderTickCounter;
 import net.pixeldreamstudios.spellhudaddon.SpellHudState;
 import net.pixeldreamstudios.spellhudaddon.config.AddonHudConfig;
 import org.spongepowered.asm.mixin.Mixin;
