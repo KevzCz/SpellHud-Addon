@@ -7,5 +7,6 @@
   "spellhud.layout.grid_3x3_down": "Grid 3x3 (Down)",
   "spellhud.layout.circular_clockwise": "Circular (Clockwise)",
   "spellhud.layout.circular_counterclockwise": "Circular (Counter-Clockwise)",
-  "spellhud.layout.centered_horizontal_above_hotbar": "Centered Above Hotbar"
+  "spellhud.layout.centered_horizontal_above_hotbar": "Centered Above Hotbar",
+  "spellhud.layout.rotating_corner_ring": "Rotating Corner"
 }

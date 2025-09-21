@@ -6,7 +6,7 @@ import net.spell_engine.client.gui.HudElement;
 import net.spell_engine.config.HudConfig;
 import net.minecraft.util.math.Vec2f;
 
-@Config(name = "spellhud-addon") // <== REQUIRED
+@Config(name = "spellhud-addon")
 public class AddonHudConfig extends HudConfig implements ConfigData {
     public LayoutStyle layout = LayoutStyle.HORIZONTAL;
 
@@ -29,7 +29,8 @@ public class AddonHudConfig extends HudConfig implements ConfigData {
         GRID_3x3_DOWN("spellhud.layout.grid_3x3_down"),
         CIRCULAR_CLOCKWISE("spellhud.layout.circular_clockwise"),
         CIRCULAR_COUNTERCLOCKWISE("spellhud.layout.circular_counterclockwise"),
-        CENTERED_HORIZONTAL_ABOVE_HOTBAR("spellhud.layout.centered_horizontal_above_hotbar");
+        CENTERED_HORIZONTAL_ABOVE_HOTBAR("spellhud.layout.centered_horizontal_above_hotbar"),
+        ROTATING_CORNER_RING("spellhud.layout.rotating_corner_ring");
 
         public final String translationKey;
 
@@ -37,6 +38,4 @@ public class AddonHudConfig extends HudConfig implements ConfigData {
             this.translationKey = translationKey;
         }
     }
-
-
 }
