@@ -1,4 +1,3 @@
-// net.pixeldreamstudios.spellhudaddon.mixin.ConfigMenuScreenMixin.java
 package net.pixeldreamstudios.spellhudaddon.mixin;
 
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -23,7 +22,9 @@ public abstract class ConfigMenuScreenMixin extends Screen {
         int centerY = this.height / 2;
 
         this.addDrawableChild(ButtonWidget.builder(Text.literal("SpellHUD Layout"), button -> {
-            this.client.setScreen(new AddonHudConfigScreen((Screen)(Object)this));
+            if (this.client != null) {
+                this.client.setScreen(new AddonHudConfigScreen((Screen)(Object)this));
+            }
         }).dimensions(centerX - 60, centerY + 60, 120, 20).build());
     }
 }

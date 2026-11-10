@@ -17,16 +17,18 @@ public class InGameHudMixin {
         var config = AutoConfig.getConfigHolder(AddonHudConfig.class).getConfig();
         return config.layout == AddonHudConfig.LayoutStyle.CENTERED_HORIZONTAL_ABOVE_HOTBAR && SpellHudState.hasVisibleSpells;
     }
+
     @Inject(method = "renderExperienceBar", at = @At("HEAD"))
     private void shiftXPBar(DrawContext context, int x, CallbackInfo ci) {
         if (shouldShiftHud()) {
             context.getMatrices().translate(0, -24, 0);
         }
     }
+
     @Inject(method = "renderHeldItemTooltip", at = @At("HEAD"))
     private void shiftHeldItemTooltipUp(DrawContext context, CallbackInfo ci) {
         if (shouldShiftHud()) {
-            context.getMatrices().translate(0, -3, 0); // Move up 12 pixels
+            context.getMatrices().translate(0, -3, 0);
         }
     }
 }

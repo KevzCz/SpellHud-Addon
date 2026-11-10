@@ -32,6 +32,8 @@ import java.util.List;
 @Mixin(SpellHotBarWidget.class)
 public class SpellHotBarWidgetMixin {
 
+    private static final int RIGHT_CAP_WIDTH = 12;
+
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     private static void spellhudaddon$overrideLayout(DrawContext context, int screenWidth, int screenHeight, ViewModel viewModel, CallbackInfo ci) {
         var addonConfig = AutoConfig.getConfigHolder(AddonHudConfig.class).getConfig();
@@ -76,7 +78,6 @@ public class SpellHotBarWidgetMixin {
     private static void renderCenteredHorizontalLayout(DrawContext context, int screenWidth, int screenHeight, ViewModel viewModel) {
         MinecraftClient client = MinecraftClient.getInstance();
         TextRenderer textRenderer = client.textRenderer;
-        var config = AutoConfig.getConfigHolder(AddonHudConfig.class).getConfig();
         List<SpellViewModel> spells = viewModel.spells();
         if (spells.isEmpty()) return;
 
@@ -87,8 +88,8 @@ public class SpellHotBarWidgetMixin {
         int slotHeight = 22;
         int iconSize = 16;
         int totalWidth = spells.size() * slotWidth;
-        boolean isCreative = MinecraftClient.getInstance().interactionManager != null &&
-                MinecraftClient.getInstance().interactionManager.getCurrentGameMode().isCreative();
+        boolean isCreative = client.interactionManager != null &&
+                client.interactionManager.getCurrentGameMode().isCreative();
 
         int creativeOffset = isCreative ? 24 : 0;
         int baseY = screenHeight - slotHeight - creativeOffset;
@@ -110,7 +111,7 @@ public class SpellHotBarWidgetMixin {
 
             context.drawTexture(background.id(), slotX, slotY, 0, 0, leftWidth, slotHeight, background.width(), background.height());
             context.drawTexture(background.id(), slotX + leftWidth, slotY, 10, 0, centerWidth, slotHeight, background.width(), background.height());
-            context.drawTexture(background.id(), slotX + leftWidth + centerWidth - 6, slotY, 170, 0, rightWidth, slotHeight, background.width(), background.height());
+            context.drawTexture(background.id(), slotX + leftWidth + centerWidth - 6, slotY, 170, 0, RIGHT_CAP_WIDTH, slotHeight, background.width(), background.height());
 
             int iconX = slotX + (int) iconOffset.x;
             int iconY = slotY + (int) iconOffset.y;
@@ -166,7 +167,6 @@ public class SpellHotBarWidgetMixin {
         int radius = 50;
         int slotSize = 22;
         int iconSize = 16;
-        Vec2f iconOffset = new Vec2f(3, 3);
         TextureFile background = new TextureFile(Identifier.of("textures/gui/sprites/hud/hotbar.png"), 182, 22);
 
         SpellHotBarWidget.lastRendered = new Rect(
@@ -200,7 +200,7 @@ public class SpellHotBarWidgetMixin {
 
             context.drawTexture(background.id(), slotX, slotY, 0, 0, 6, slotSize, background.width(), background.height());
             context.drawTexture(background.id(), slotX + 6, slotY, 10, 0, 10, slotSize, background.width(), background.height());
-            context.drawTexture(background.id(), slotX + 10, slotY, 170, 0, 11, slotSize, background.width(), background.height());
+            context.drawTexture(background.id(), slotX + 10, slotY, 170, 0, RIGHT_CAP_WIDTH, slotSize, background.width(), background.height());
 
             int iconX = slotX + 3;
             int iconY = slotY + 3;
@@ -303,7 +303,7 @@ public class SpellHotBarWidgetMixin {
 
             context.drawTexture(background.id(), slotX, slotY, 0, 0, leftWidth, slotHeight, background.width(), background.height());
             context.drawTexture(background.id(), slotX + leftWidth, slotY, 10, 0, centerWidth, slotHeight, background.width(), background.height());
-            context.drawTexture(background.id(), slotX + leftWidth + centerWidth - 6, slotY, 170, 0, rightWidth, slotHeight, background.width(), background.height());
+            context.drawTexture(background.id(), slotX + leftWidth + centerWidth - 6, slotY, 170, 0, RIGHT_CAP_WIDTH, slotHeight, background.width(), background.height());
 
             int iconX = slotX + (int) iconOffset.x;
             int iconY = slotY + (int) iconOffset.y;
@@ -399,10 +399,10 @@ public class SpellHotBarWidgetMixin {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
-        if (spells.size() > 0) {
+        if (!spells.isEmpty()) {
             int cx = (int) center.x - slotSize / 2;
             int cy = (int) center.y - slotSize / 2;
-            drawSlot(context, background, cx, cy, leftWidth, midWidth, rightWidth, slotSize);
+            drawSlot(context, background, cx, cy, leftWidth, midWidth, slotSize);
             drawIconAndCooldown(context, spells.get(0), cx + 3, cy + 3, iconSize);
             drawKeybind(context, textRenderer, spells.get(0), cx + slotSize / 2, cy + 8, true);
         }
@@ -412,10 +412,8 @@ public class SpellHotBarWidgetMixin {
         float angleA = baseCorner + SpellHudState.rotationRad;
         float angleB = angleA + (float)Math.PI;
 
-        int[] groupA = new int[]{1,2,3,4};
-        int[] groupB = new int[]{5,6,7,8};
-
-        float[] offsetsDeg = new float[]{-25f, -8f, 8f, 25f};
+        int[] groupA = new int[]{1, 2, 3, 4};
+        int[] groupB = new int[]{5, 6, 7, 8};
 
         {
             float cos = (float)Math.cos(angleA);
@@ -434,7 +432,7 @@ public class SpellHotBarWidgetMixin {
                 int sx = Math.round(center.x + dirX * r + tanX * t) - slotSize / 2;
                 int sy = Math.round(center.y + dirY * r + tanY * t) - slotSize / 2;
 
-                drawSlot(context, background, sx, sy, leftWidth, midWidth, rightWidth, slotSize);
+                drawSlot(context, background, sx, sy, leftWidth, midWidth, slotSize);
                 drawIconAndCooldown(context, spells.get(idx), sx + 3, sy + 3, iconSize);
                 drawKeybind(context, textRenderer, spells.get(idx), sx + slotSize / 2, sy + 8, false);
             }
@@ -457,7 +455,7 @@ public class SpellHotBarWidgetMixin {
                 int sx = Math.round(center.x + dirX * r + tanX * t) - slotSize / 2;
                 int sy = Math.round(center.y + dirY * r + tanY * t) - slotSize / 2;
 
-                drawSlot(context, background, sx, sy, leftWidth, midWidth, rightWidth, slotSize);
+                drawSlot(context, background, sx, sy, leftWidth, midWidth, slotSize);
                 drawIconAndCooldown(context, spells.get(idx), sx + 3, sy + 3, iconSize);
                 drawKeybind(context, textRenderer, spells.get(idx), sx + slotSize / 2, sy + 8, false);
             }
@@ -525,10 +523,10 @@ public class SpellHotBarWidgetMixin {
 
 
 
-    private static void drawSlot(DrawContext ctx, TextureFile bg, int x, int y, int leftW, int midW, int rightW, int h) {
+    private static void drawSlot(DrawContext ctx, TextureFile bg, int x, int y, int leftW, int midW, int h) {
         ctx.drawTexture(bg.id(), x, y, 0, 0, leftW, h, bg.width(), bg.height());
         ctx.drawTexture(bg.id(), x + leftW, y, 10, 0, midW, h, bg.width(), bg.height());
-        ctx.drawTexture(bg.id(), x + leftW + midW - 6, y, 170, 0, rightW, h, bg.width(), bg.height());
+        ctx.drawTexture(bg.id(), x + leftW + midW - 6, y, 170, 0, RIGHT_CAP_WIDTH, h, bg.width(), bg.height());
     }
 
     private static void drawIconAndCooldown(DrawContext ctx, SpellViewModel spell, int ix, int iy, int iconSize) {
@@ -575,6 +573,7 @@ public class SpellHotBarWidgetMixin {
             keybinding.drawable().draw(context, x, y, horizontalAnchor, verticalAnchor);
         } else {
             String label = keybinding.label();
+            if (label == null) return;
             int width = textRenderer.getWidth(label);
             int xOffset = switch (horizontalAnchor) {
                 case LEADING -> width / 2;

@@ -22,10 +22,10 @@ public class AddonHudConfigScreen extends Screen {
         int centerY = height / 2;
 
         addDrawableChild(CyclingButtonWidget.<AddonHudConfig.LayoutStyle>builder(
-                        layout -> Text.translatable(layout.translationKey)) // <== changed from Text.literal
+                        layout -> Text.translatable(layout.translationKey))
                 .values(AddonHudConfig.LayoutStyle.values())
                 .initially(config.layout)
-                .build(centerX - 125, centerY - 20, 250, 20, Text.translatable("spellhud.layout.title"), // also changed
+                .build(centerX - 125, centerY - 20, 250, 20, Text.translatable("spellhud.layout.title"),
                         (button, layout) -> {
                             config.layout = layout;
                             AutoConfig.getConfigHolder(AddonHudConfig.class).save();

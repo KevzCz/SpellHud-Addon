@@ -1,0 +1,3 @@
+- More consistent draws across layouts
+- Fixed a crash when spell keybind had no label text
+- Added some guards
